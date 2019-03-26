@@ -79,6 +79,11 @@ public class EditorView implements EditorPresenter.View, IsElement {
         AceEditorMode java = ExtensionToEditorMode.fromExtension(type);
         aceEditor.setMode(java);
     }
+
+    @Override
+    public String getContent(){
+        return aceEditor.getText();
+    }
     
     @EventHandler("btnSave")
     public void saveContent(ClickEvent event) {
@@ -105,7 +110,7 @@ public class EditorView implements EditorPresenter.View, IsElement {
                 DomGlobal.console.error(e);
             }
         } else {
-            Window.alert("Provide the asset location using the query param \"asset\".");
+//            Window.alert("Provide the asset location using the query param \"asset\".");
         }
     }
 

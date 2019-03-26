@@ -5,6 +5,7 @@ import javax.inject.Inject;
 
 import org.jboss.errai.enterprise.client.jaxrs.api.RestClient;
 import org.jboss.errai.ioc.client.api.EntryPoint;
+import org.uberfire.client.mvp.ActivityManager;
 import org.uberfire.editor.client.screens.EditorPresenter;
 
 import com.google.gwt.animation.client.Animation;
@@ -25,7 +26,6 @@ public class ShowcaseEntryPoint {
     //Fade out the "Loading application" pop-up
     private void hideLoadingPopup() {
         final Element e = RootPanel.get( "loading" ).getElement();
-
 
         new Animation() {
 
