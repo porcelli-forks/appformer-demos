@@ -389,6 +389,7 @@
           <noServer>false</noServer>
           <server>org.jboss.errai.cdi.server.gwt.EmbeddedWildFlyLauncher</server>
           <module>org.uberfire.editor.FastCompiledStandaloneEditor</module>
+          <saveSourceOutput>true</saveSourceOutput>
           <disableCastChecking>true</disableCastChecking>
           <runTarget>index.html</runTarget>
           <hostedWebapp>src/main/webapp</hostedWebapp>

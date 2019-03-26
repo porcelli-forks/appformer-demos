@@ -1,3 +1,5 @@
+package org.uberfire.editor.server.cors;
+
 import java.io.IOException;
 
 import javax.servlet.Filter;
@@ -41,8 +43,14 @@ public class CORSFilter implements Filter {
         System.out.println("CORSFilter HTTP Request: " + request.getMethod());
 
         // Authorize (allow) all domains to consume the content
-        ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Origin", "*");
-        ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Methods", "GET, OPTIONS, HEAD, PUT, POST");
+        final HttpServletResponse r = (HttpServletResponse) servletResponse;
+        String origin = request.getHeader("origin");
+        r.addHeader("Access-Control-Allow-Origin", origin);
+        r.addHeader("Access-Control-Allow-Headers",
+                    "Accept,Accept-Encoding,Accept-Language,Cache-Control,Connection,Content-Length,Content-Type," +
+                            "Cookie,Host,Pragma,Referer,RemoteQueueID,User-Agent");
+        r.addHeader("Access-Control-Allow-Credentials", "true");
+        r.addHeader("Access-Control-Allow-Methods", "GET, OPTIONS, HEAD, PUT, POST");
 
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
 

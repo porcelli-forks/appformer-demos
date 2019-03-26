@@ -30,4 +30,9 @@
   <source path='client' />
   <source path='shared' />
 
+  <set-property name="compiler.useSourceMaps" value="true"/>
+  <set-configuration-property name="includeSourceMapUrl"
+                              value="sourcemaps/__HASH___sourceMap__FRAGMENT__.json"/>
+
+
 </module>
