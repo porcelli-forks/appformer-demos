@@ -19,27 +19,18 @@ package org.uberfire.editor.client.screens;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-import org.jboss.errai.common.client.api.elemental2.IsElement;
-import org.jboss.errai.ui.shared.api.annotations.DataField;
-import org.jboss.errai.ui.shared.api.annotations.EventHandler;
-import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.uberfire.editor.shared.util.ExtensionToEditorMode;
-import org.uberfire.ext.widgets.common.client.ace.AceEditor;
-import org.uberfire.ext.widgets.common.client.ace.AceEditorMode;
-import org.uberfire.ext.widgets.common.client.ace.AceEditorTheme;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.Window;
-
-import elemental2.dom.DomGlobal;
-import elemental2.dom.HTMLButtonElement;
 import elemental2.dom.HTMLDivElement;
 import elemental2.dom.HTMLElement;
+import org.jboss.errai.common.client.api.elemental2.IsElement;
+import org.jboss.errai.ui.shared.api.annotations.DataField;
+import org.jboss.errai.ui.shared.api.annotations.Templated;
+import org.uberfire.ext.widgets.common.client.ace.AceEditor;
+import org.uberfire.ext.widgets.common.client.ace.AceEditorTheme;
 
 @Dependent
 @Templated
-public class EditorView implements EditorPresenter.View, IsElement {
+public class EditorView implements EditorPresenter.View,
+                                   IsElement {
 
     @Inject
     @DataField
@@ -48,10 +39,6 @@ public class EditorView implements EditorPresenter.View, IsElement {
     @Inject
     @DataField
     AceEditor aceEditor;
-    
-    @Inject
-    @DataField
-    HTMLButtonElement btnSave;
 
     EditorPresenter presenter;
 
@@ -60,9 +47,6 @@ public class EditorView implements EditorPresenter.View, IsElement {
         this.presenter = presenter;
         aceEditor.startEditor();
         aceEditor.setTheme(AceEditorTheme.CHROME);
-        aceEditor.setAutocompleteEnabled(true);
-        btnSave.disabled = true;
-        this.getContentLocationAndLoad();
     }
 
     @Override
@@ -71,54 +55,14 @@ public class EditorView implements EditorPresenter.View, IsElement {
     }
 
     @Override
-    public void setContent(String type, String content) {
-        btnSave.disabled = false;
+    public void setContent(String content) {
         aceEditor.getElement().getStyle().setOpacity(1.0);
         aceEditor.setReadOnly(false);
         aceEditor.setText(content);
-        AceEditorMode java = ExtensionToEditorMode.fromExtension(type);
-        aceEditor.setMode(java);
     }
 
     @Override
-    public String getContent(){
+    public String getContent() {
         return aceEditor.getText();
     }
-    
-    @EventHandler("btnSave")
-    public void saveContent(ClickEvent event) {
-        try {
-            aceEditor.getElement().getStyle().setOpacity(0.2);
-            aceEditor.setReadOnly(true);
-            btnSave.disabled = true;
-            presenter.saveContent(aceEditor.getText());
-        } catch (RequestException e) {
-            Window.alert("Error saving content: " + e.getMessage());
-            DomGlobal.console.error(e);
-        }
-    }
-    
-    private void getContentLocationAndLoad() {
-        String assetLocation = Window.Location.getParameter("asset");
-        
-        if (assetLocation != null) {
-            try {
-                presenter.loadAsset(assetLocation);
-                Window.setTitle("Editing '" + assetLocation + "'");
-            } catch (RequestException e) {
-                Window.alert("Not able to load asset " + e.getMessage());
-                DomGlobal.console.error(e);
-            }
-        } else {
-//            Window.alert("Provide the asset location using the query param \"asset\".");
-        }
-    }
-
-    @Override
-    public void showError(String message) {
-        Window.alert(message);
-        aceEditor.setReadOnly(true);
-        btnSave.disabled = true;
-    }
-
 }

@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 
-package org.uberfire.editor.shared.conf;
+package org.uberfire.editor.server.resource;
 
-import org.uberfire.spaces.Space;
-import org.uberfire.spaces.SpacesAPI;
+import javax.enterprise.context.ApplicationScoped;
 
-/**
- *
- */
-public class EditorDefinitions {
-    
-    // TODO: Change
-    private final static String SPACE_PROP = "org.uberfire.demo.defaultspace";
-    
-    public final static String DEFAULT_SPACE_NAME = System.getProperty(SPACE_PROP, SpacesAPI.DEFAULT_SPACE_NAME);
-    
-    public static final Space DEFAULT_SPACE = new Space(DEFAULT_SPACE_NAME);
+import org.jboss.errai.bus.server.annotations.Service;
+import org.uberfire.editor.shared.EchoBackend;
 
-    public static final String DEFAULT_REPOSITORY = "editor";
+@ApplicationScoped
+@Service
+class EchoBackendImpl implements EchoBackend {
 
+    @Override
+    public String getContent(final String content) {
+        return content;
+    }
+
+    @Override
+    public String setContent(final String content) {
+        return content;
+    }
 }

@@ -20,20 +20,15 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
 import elemental2.promise.Promise;
+import org.jboss.errai.common.client.api.Caller;
+import org.jboss.errai.common.client.api.RemoteCallback;
 import org.uberfire.client.annotations.WorkbenchClientEditor;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.client.mvp.UberElemental;
 import org.uberfire.client.promise.Promises;
+import org.uberfire.editor.shared.EchoBackend;
 import org.uberfire.lifecycle.GetContent;
 import org.uberfire.lifecycle.IsDirty;
 import org.uberfire.lifecycle.OnOpen;
@@ -43,37 +38,21 @@ import org.uberfire.lifecycle.SetContent;
 @WorkbenchClientEditor(identifier = "EditorPresenter")
 public class EditorPresenter {
 
-    @SetContent
-    public void setContent(String value) {
-        this.view.setContent("sxss", value);
-    }
-
-    @GetContent
-    public Promise getContent() {
-        return promises.resolve(view.getContent());
-    }
-
-    @IsDirty
-    public boolean isDirty() {
-        return false;
-    }
-
     public interface View extends UberElemental<EditorPresenter> {
 
-        void setContent(String type, String content);
+        void setContent(String content);
 
         String getContent();
-
-        void showError(String string);
     }
 
     @Inject
     private View view;
 
     @Inject
-    private Promises promises;
+    Caller<EchoBackend> echoBackendCaller;
 
-    private String loadedAssetLocation;
+    @Inject
+    private Promises promises;
 
     @PostConstruct
     public void init() {
@@ -94,58 +73,20 @@ public class EditorPresenter {
         return view;
     }
 
-    /**
-     * Load an asset content
-     * @throws RequestException
-     */
-    public void loadAsset(String location) throws RequestException {
-        loadedAssetLocation = location;
-        sendRequest(loadedAssetLocation, null, "not able to load asset");
+    @SetContent
+    public void setContent(final String value) {
+        echoBackendCaller.call((RemoteCallback<String>) stirng -> view.setContent(stirng)).setContent(value);
     }
 
-    /**
-     * Save the editor content to the location
-     * @param text
-     * @throws RequestException
-     */
-    public void saveContent(String text) throws RequestException {
-        sendRequest(loadedAssetLocation, text, "not able to save asset");
-    }
-
-    private void sendRequest(String assetLocation, String text, String errorMessage) throws RequestException {
-        String error = "Error '" + errorMessage
-                + "' when handling asset "
-                + assetLocation;
-        String assetURI = buildAssetURI(assetLocation);
-        RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, assetURI);
-
-        if (text != null) {
-            builder = new RequestBuilder(RequestBuilder.POST, assetURI);
-        }
-
-        builder.sendRequest(text, new RequestCallback() {
-
-            @Override
-            public void onResponseReceived(Request request, Response response) {
-                if (response.getStatusCode() == Response.SC_NOT_FOUND) {
-                    getView().showError(error);
-                    return;
-                }
-                JSONValue value = JSONParser.parseStrict(response.getText());
-                String content = value.isObject().get("content").isString().stringValue();
-                String type = value.isObject().get("extension").isString().stringValue();
-                getView().setContent(type, content);
-            }
-
-            @Override
-            public void onError(Request request, Throwable exception) {
-                getView().showError(error);
-            }
+    @GetContent
+    public Promise getContent() {
+        return promises.promisify(echoBackendCaller, s -> {
+            return s.getContent(view.getContent());
         });
     }
 
-    private String buildAssetURI(String location) {
-        String encodedLocation = URL.encodePathSegment(location);
-        return "./rest/asset/" + encodedLocation;
+    @IsDirty
+    public boolean isDirty() {
+        return false;
     }
 }

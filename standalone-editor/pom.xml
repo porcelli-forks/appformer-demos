@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
   <parent>
@@ -279,6 +279,11 @@
 
     <dependency>
       <groupId>org.jboss.errai</groupId>
+      <artifactId>errai-bus</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.errai</groupId>
       <artifactId>errai-common</artifactId>
     </dependency>
 
@@ -382,8 +387,7 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
         <configuration>
-          <extraJvmArgs>-Xmx4024m -XX:CompileThreshold=7000
-            -Derrai.jboss.home=${errai.jboss.home}</extraJvmArgs>
+          <extraJvmArgs>-Xmx4024m -XX:CompileThreshold=7000 -Derrai.jboss.home=${errai.jboss.home}</extraJvmArgs>
           <strict>true</strict>
           <logLevel>INFO</logLevel>
           <noServer>false</noServer>
@@ -549,74 +553,5 @@
     </plugins>
 
   </build>
-
-
-  <profiles>
-    <profile>
-      <id>docker</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>io.fabric8</groupId>
-            <artifactId>docker-maven-plugin</artifactId>
-            <configuration>
-              <images>
-                <image>
-                  <name>${project.build.finalName}</name>
-                  <run>
-                    <ports>
-                      <port>8080:8080</port>
-                    </ports>
-                  </run>
-                  <build>
-                    <from>java:openjdk-8-jdk</from>
-                    <ports>
-                      <port>8080</port>
-                    </ports>
-                    <assembly>
-                      <basedir>/</basedir>
-                      <inline>
-                        <files>
-                          <file>
-                            <source>${project.build.directory}/${project.artifactId}-thorntail.jar</source>
-                            <outputDirectory>/opt</outputDirectory>
-                          </file>
-                        </files>
-                      </inline>
-                    </assembly>
-                    <entryPoint>
-                      <shell>java -jar /opt/${project.artifactId}-thorntail.jar</shell>
-                    </entryPoint>
-                  </build>
-                </image>
-              </images>
-            </configuration>
-            <executions>
-              <execution>
-                <phase>package</phase>
-                <goals>
-                  <goal>build</goal>
-                </goals>
-              </execution>
-              <execution>
-                <id>pre-integration-test</id>
-                <phase>pre-integration-test</phase>
-                <goals>
-                  <goal>start</goal>
-                </goals>
-              </execution>
-              <execution>
-                <id>post-integration-test</id>
-                <phase>post-integration-test</phase>
-                <goals>
-                  <goal>stop</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    </profiles>
 
 </project>

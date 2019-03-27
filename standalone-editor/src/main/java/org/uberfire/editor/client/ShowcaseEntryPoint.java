@@ -19,25 +19,5 @@ public class ShowcaseEntryPoint {
 
     @PostConstruct
     public void startApp() {
-        hideLoadingPopup();
-    }
-
-
-    //Fade out the "Loading application" pop-up
-    private void hideLoadingPopup() {
-        final Element e = RootPanel.get( "loading" ).getElement();
-
-        new Animation() {
-
-            @Override
-            protected void onUpdate( double progress ) {
-                e.getStyle().setOpacity( 1.0 - progress );
-            }
-
-            @Override
-            protected void onComplete() {
-                e.getStyle().setVisibility( Style.Visibility.HIDDEN );
-            }
-        }.run( 500 );
     }
 }
