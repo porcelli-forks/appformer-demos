@@ -9,7 +9,7 @@ swarm:
           default-user: local
           allowed-users: local
           skip-group-loading: true
-        sasasasasasasasasasasasasasasasasasasasasasasasasasasaproperties-authentication:
+        properties-authentication:
           path: application-users.properties
           plain-text: true
         properties-authorization:

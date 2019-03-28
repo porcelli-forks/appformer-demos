@@ -19,6 +19,11 @@
   <inherits
     name="org.uberfire.ext.preferences.UberfirePreferences" />
 
+  <inherits name="com.google.gwt.logging.Logging"/>
+
+  <set-property name="gwt.logging.logLevel" value="INFO"/>
+  <set-property name="gwt.logging.enabled" value="TRUE"/>
+
   <!-- Experimental -->
   <inherits
     name="org.uberfire.experimental.UberfireExperimentalAPI" />
