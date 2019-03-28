@@ -1,0 +1,20 @@
+{
+  "name": "demo",
+  "editors": [
+    {
+      "regex": "*.json",
+      "screen": "HomePerspective",
+      "editor": "EditorPresenter",
+      "resources": {
+        "main": "org.uberfire.editor.StandaloneEditor/org.uberfire.editor.StandaloneEditor.nocache.js",
+        "css": [
+          "org.uberfire.editor.StandaloneEditor/css/patternfly.min.css"
+        ],
+        "js": [
+          "org.uberfire.editor.StandaloneEditor/ace/ace.js",
+          "org.uberfire.editor.StandaloneEditor/ace/theme-chrome.js"
+        ]
+      }
+    }
+  ]
+}

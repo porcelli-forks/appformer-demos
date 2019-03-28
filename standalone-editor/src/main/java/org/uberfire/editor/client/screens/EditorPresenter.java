@@ -75,7 +75,7 @@ public class EditorPresenter {
 
     @SetContent
     public void setContent(final String value) {
-        echoBackendCaller.call((RemoteCallback<String>) stirng -> view.setContent(stirng)).setContent(value);
+        echoBackendCaller.call((RemoteCallback<String>) string -> view.setContent(string)).setContent(value);
     }
 
     @GetContent
