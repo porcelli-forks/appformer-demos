@@ -39,18 +39,17 @@ public class CORSFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
             throws IOException, ServletException {
 
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        System.out.println("CORSFilter HTTP Request: " + request.getMethod());
+        final HttpServletRequest request = (HttpServletRequest) servletRequest;
 
         // Authorize (allow) all domains to consume the content
-        final HttpServletResponse r = (HttpServletResponse) servletResponse;
-        String origin = request.getHeader("origin");
-        r.addHeader("Access-Control-Allow-Origin", origin);
-        r.addHeader("Access-Control-Allow-Headers",
-                    "Accept,Accept-Encoding,Accept-Language,Cache-Control,Connection,Content-Length,Content-Type," +
-                            "Cookie,Host,Pragma,Referer,RemoteQueueID,User-Agent");
-        r.addHeader("Access-Control-Allow-Credentials", "true");
-        r.addHeader("Access-Control-Allow-Methods", "GET, OPTIONS, HEAD, PUT, POST");
+        final HttpServletResponse response = (HttpServletResponse) servletResponse;
+        final String origin = request.getHeader("origin");
+        response.addHeader("Access-Control-Allow-Origin", origin);
+        response.addHeader("Access-Control-Allow-Headers",
+                           "Accept,Accept-Encoding,Accept-Language,Cache-Control,Connection,Content-Length,Content-Type," +
+                                   "Cookie,Host,Pragma,Referer,RemoteQueueID,User-Agent");
+        response.addHeader("Access-Control-Allow-Credentials", "true");
+        response.addHeader("Access-Control-Allow-Methods", "GET, OPTIONS, HEAD, PUT, POST");
 
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
 
